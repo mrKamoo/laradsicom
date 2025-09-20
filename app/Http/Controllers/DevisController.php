@@ -205,4 +205,45 @@ class DevisController extends Controller
 
         return \Storage::download($devis->fichier_devis, $devis->nom_fichier_original);
     }
+
+    public function view(Devis $devis)
+    {
+        if (!$devis->fichier_devis) {
+            return abort(404, 'Aucun fichier associé à ce devis.');
+        }
+
+        if (!\Storage::exists($devis->fichier_devis)) {
+            return abort(404, 'Fichier non trouvé sur le serveur.');
+        }
+
+        // Le disque local utilise storage/app/private comme racine
+        $filePath = storage_path('app/private/' . $devis->fichier_devis);
+
+        // Vérifier que le fichier existe physiquement
+        if (!file_exists($filePath)) {
+            return abort(404, 'Fichier physique non trouvé.');
+        }
+
+        // Vérifier l'extension du fichier en premier lieu
+        $extension = strtolower(pathinfo($devis->nom_fichier_original ?? $devis->fichier_devis, PATHINFO_EXTENSION));
+
+        if ($extension !== 'pdf') {
+            return abort(400, 'Le fichier n\'est pas un PDF.');
+        }
+
+        // Essayer de déterminer le type MIME
+        try {
+            $mimeType = mime_content_type($filePath);
+            if ($mimeType !== 'application/pdf') {
+                $mimeType = 'application/pdf';
+            }
+        } catch (\Exception $e) {
+            $mimeType = 'application/pdf';
+        }
+
+        return response()->file($filePath, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . ($devis->nom_fichier_original ?? 'devis.pdf') . '"'
+        ]);
+    }
 }

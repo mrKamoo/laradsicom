@@ -187,20 +187,72 @@
                             <hr>
                             <div>
                                 <h6 class="fw-bold text-primary">Pièce jointe</h6>
-                                <div class="d-flex align-items-center p-3 border rounded bg-light">
+                                <div class="d-flex align-items-center p-3 border rounded bg-light mb-3">
                                     <div class="me-3">
-                                        <i class="fas fa-file-pdf fa-2x text-danger"></i>
+                                        @php
+                                            $extension = strtolower(pathinfo($devis->nom_fichier_original ?? $devis->fichier_devis, PATHINFO_EXTENSION));
+                                            $isPdf = $extension === 'pdf';
+                                        @endphp
+                                        <i class="fas {{ $isPdf ? 'fa-file-pdf text-danger' : 'fa-file text-secondary' }} fa-2x"></i>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <h6 class="mb-1">{{ $devis->nom_fichier_original ?? 'Document.pdf' }}</h6>
-                                        <small class="text-muted">Devis du fournisseur</small>
+                                        <h6 class="mb-1">{{ $devis->nom_fichier_original ?? 'Document' }}</h6>
+                                        <small class="text-muted">
+                                            Devis du fournisseur
+                                            @if(!$isPdf)
+                                                <span class="text-warning">(Aperçu non disponible - format {{ strtoupper($extension) }})</span>
+                                            @endif
+                                        </small>
                                     </div>
                                     <div>
-                                        <a href="{{ route('devis.download', $devis) }}" class="btn btn-outline-primary btn-sm">
+                                        <a href="{{ route('devis.download', $devis) }}" class="btn btn-outline-primary btn-sm me-2">
                                             <i class="fas fa-download me-1"></i>
                                             Télécharger
                                         </a>
+                                        @if($isPdf)
+                                            <button class="btn btn-outline-secondary btn-sm" onclick="togglePdfViewer()">
+                                                <i class="fas fa-eye me-1"></i>
+                                                Aperçu
+                                            </button>
+                                        @endif
                                     </div>
+                                </div>
+
+                                @if($isPdf)
+                                    <!-- Message informatif pour l'aperçu -->
+                                    <div id="pdf-viewer" class="border rounded bg-white" style="display: none;">
+                                        <div class="p-4 text-center">
+                                            <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                                            <h5>Aperçu du PDF</h5>
+                                            <p class="text-muted mb-3">
+                                                En raison des restrictions de sécurité des navigateurs, l'aperçu direct n'est pas disponible.
+                                                Veuillez utiliser l'un des boutons ci-dessous pour consulter le document.
+                                            </p>
+                                            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                                <a href="{{ route('devis.view', $devis) }}" target="_blank" class="btn btn-primary">
+                                                    <i class="fas fa-external-link-alt me-1"></i>
+                                                    Ouvrir dans un nouvel onglet
+                                                </a>
+                                                <a href="{{ route('devis.download', $devis) }}" class="btn btn-outline-secondary">
+                                                    <i class="fas fa-download me-1"></i>
+                                                    Télécharger
+                                                </a>
+                                                <button class="btn btn-outline-secondary" onclick="togglePdfViewer()">
+                                                    <i class="fas fa-times me-1"></i>
+                                                    Fermer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        @else
+                            <hr>
+                            <div>
+                                <h6 class="fw-bold text-primary">Pièce jointe</h6>
+                                <div class="p-3 border rounded bg-light text-muted">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Aucun fichier attaché à ce devis.
                                 </div>
                             </div>
                         @endif
@@ -426,4 +478,21 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function togglePdfViewer() {
+            const viewer = document.getElementById('pdf-viewer');
+
+            if (viewer.style.display === 'none') {
+                viewer.style.display = 'block';
+
+                // Scroll vers le visualiseur
+                setTimeout(() => {
+                    viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
+                viewer.style.display = 'none';
+            }
+        }
+    </script>
 </x-app-layout>

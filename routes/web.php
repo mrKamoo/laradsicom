@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/devis/{devis}/select', [DevisController::class, 'select'])->name('devis.select');
     Route::patch('/devis/{devis}/deselect', [DevisController::class, 'deselect'])->name('devis.deselect');
     Route::get('/devis/{devis}/download', [DevisController::class, 'download'])->name('devis.download');
+    Route::get('/devis/{devis}/view', [DevisController::class, 'view'])->name('devis.view');
 
     // Routes des prescripteurs
     Route::resource('prescripteurs', PrescripteurController::class);
