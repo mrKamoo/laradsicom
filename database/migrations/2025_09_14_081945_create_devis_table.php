@@ -14,21 +14,30 @@ return new class extends Migration
         Schema::create('devis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('commande_id')->constrained('commandes')->onDelete('cascade');
-            $table->foreignId('fournisseur_id')->constrained('fournisseurs')->onDelete('cascade');
+            $table->foreignId('fournisseur_id')->constrained('fournisseurs')->onDelete('restrict');
 
             $table->string('numero_devis');
             $table->date('date_devis');
             $table->date('date_validite')->nullable();
             $table->decimal('montant_ht', 10, 2);
-            $table->decimal('montant_tva', 10, 2)->nullable();
+            $table->decimal('taux_tva', 5, 2)->default(20.00);
+            $table->decimal('montant_tva', 10, 2);
             $table->decimal('montant_ttc', 10, 2);
-            $table->integer('delai_livraison')->nullable(); // en jours
+            $table->integer('delai_livraison')->nullable();
+            $table->text('description')->nullable();
             $table->text('conditions_particulieres')->nullable();
             $table->text('observations')->nullable();
-            $table->boolean('retenu')->default(false); // Devis sélectionné
-            $table->text('fichier_devis')->nullable(); // Chemin vers le fichier PDF
+            $table->boolean('garanti')->default(false);
+            $table->boolean('installation_incluse')->default(false);
+            $table->boolean('selectionne')->default(false);
+            $table->timestamp('date_selection')->nullable();
+            $table->string('fichier_devis')->nullable();
+            $table->string('nom_fichier_original')->nullable();
 
             $table->timestamps();
+
+            $table->index(['commande_id', 'selectionne']);
+            $table->index('date_validite');
         });
     }
 
