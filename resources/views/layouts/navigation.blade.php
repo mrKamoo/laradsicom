@@ -131,6 +131,10 @@
                             </button>
                         </form>
                     </li>
+                      <li>
+                            Version : {{ config('app.version') }}
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
