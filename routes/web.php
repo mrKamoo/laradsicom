@@ -6,6 +6,7 @@ use App\Http\Controllers\DevisController;
 use App\Http\Controllers\PrescripteurController;
 use App\Http\Controllers\CommuneController;
 use App\Http\Controllers\FournisseurController;
+use App\Http\Controllers\TypeCommandeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -50,6 +51,10 @@ Route::middleware('auth')->group(function () {
     // Routes des fournisseurs
     Route::resource('fournisseurs', FournisseurController::class);
     Route::patch('/fournisseurs/{fournisseur}/toggle-active', [FournisseurController::class, 'toggleActive'])->name('fournisseurs.toggle-active');
+
+    // Routes des types de commandes
+    Route::resource('type-commandes', TypeCommandeController::class, ['parameters' => ['type-commandes' => 'typeCommande']]);
+    Route::patch('/type-commandes/{typeCommande}/toggle', [TypeCommandeController::class, 'toggle'])->name('type-commandes.toggle');
 });
 
 require __DIR__.'/auth.php';

@@ -64,7 +64,7 @@
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->routeIs(['prescripteurs.*', 'communes.*', 'fournisseurs.*']) ? 'active fw-bold' : '' }}"
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs(['prescripteurs.*', 'communes.*', 'fournisseurs.*', 'type-commandes.*']) ? 'active fw-bold' : '' }}"
                        href="#" role="button" data-bs-toggle="dropdown">
                         <i class="fas fa-users me-1"></i>
                         Gestion
@@ -86,6 +86,12 @@
                             <a class="dropdown-item" href="{{ route('fournisseurs.index') }}">
                                 <i class="fas fa-truck me-2"></i>
                                 Fournisseurs
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('type-commandes.index') }}">
+                                <i class="fas fa-tags me-2"></i>
+                                Types de commandes
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>
