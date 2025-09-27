@@ -133,8 +133,7 @@
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                            Version : {{ config('app.version') }}
-                        </a>
+                            V:{{ config('app.version') }}
                     </li>
                 </ul>
             </div>
