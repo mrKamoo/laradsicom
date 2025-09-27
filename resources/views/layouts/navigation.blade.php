@@ -131,6 +131,10 @@
                             </button>
                         </form>
                     </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="dropdown-item text-muted">
+                            V:{{ config('app.version') }}
+                    </li>
                 </ul>
             </div>
         </div>
