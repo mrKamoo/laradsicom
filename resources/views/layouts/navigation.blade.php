@@ -131,7 +131,8 @@
                             </button>
                         </form>
                     </li>
-                      <li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
                             Version : {{ config('app.version') }}
                         </a>
                     </li>
